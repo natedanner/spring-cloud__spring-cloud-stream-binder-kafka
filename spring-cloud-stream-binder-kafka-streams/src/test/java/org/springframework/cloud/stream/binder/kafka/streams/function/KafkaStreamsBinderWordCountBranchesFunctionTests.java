@@ -58,7 +58,7 @@ public class KafkaStreamsBinderWordCountBranchesFunctionTests {
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
 			"counts", "foo", "bar");
 
-	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
+	private static final EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
 	private static Consumer<String, String> consumer;
 
@@ -186,9 +186,9 @@ public class KafkaStreamsBinderWordCountBranchesFunctionTests {
 		@SuppressWarnings({"unchecked"})
 		public Function<KStream<Object, String>, KStream<?, WordCount>[]> process() {
 
-			Predicate<Object, WordCount> isEnglish = (k, v) -> v.word.equals("english");
-			Predicate<Object, WordCount> isFrench = (k, v) -> v.word.equals("french");
-			Predicate<Object, WordCount> isSpanish = (k, v) -> v.word.equals("spanish");
+			Predicate<Object, WordCount> isEnglish = (k, v) -> "english".equals(v.word);
+			Predicate<Object, WordCount> isFrench = (k, v) -> "french".equals(v.word);
+			Predicate<Object, WordCount> isSpanish = (k, v) -> "spanish".equals(v.word);
 
 			return input -> {
 				final Map<String, KStream<Object, WordCount>> stringKStreamMap = input

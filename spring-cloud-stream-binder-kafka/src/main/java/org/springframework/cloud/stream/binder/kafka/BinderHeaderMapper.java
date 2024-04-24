@@ -297,7 +297,7 @@ public class BinderHeaderMapper extends AbstractKafkaHeaderMapper {
 	public void toHeaders(Headers source, final Map<String, Object> headers) {
 		final Map<String, String> jsonTypes = decodeJsonTypes(source);
 		source.forEach(header -> {
-			if (!(header.key().equals(JSON_TYPES))) {
+			if (!header.key().equals(JSON_TYPES)) {
 				if (jsonTypes != null && jsonTypes.containsKey(header.key())) {
 					String requestedType = jsonTypes.get(header.key());
 					populateJsonValueHeader(header, requestedType, headers);

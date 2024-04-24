@@ -59,11 +59,11 @@ public class MultipleFunctionsInSameAppTests {
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
 			"coffee", "electronics");
 
-	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
+	private static final EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
 	private static Consumer<String, String> consumer;
 
-	private static CountDownLatch countDownLatch = new CountDownLatch(2);
+	private static final CountDownLatch countDownLatch = new CountDownLatch(2);
 
 	@BeforeClass
 	public static void setUp() {
@@ -221,8 +221,8 @@ public class MultipleFunctionsInSameAppTests {
 		@Bean
 		public Function<KStream<String, String>, KStream<String, String>[]> process() {
 			return input -> input.branch(
-					(s, p) -> p.equalsIgnoreCase("coffee"),
-					(s, p) -> p.equalsIgnoreCase("electronics"));
+					(s, p) -> "coffee".equalsIgnoreCase(p),
+					(s, p) -> "electronics".equalsIgnoreCase(p));
 		}
 
 		@Bean

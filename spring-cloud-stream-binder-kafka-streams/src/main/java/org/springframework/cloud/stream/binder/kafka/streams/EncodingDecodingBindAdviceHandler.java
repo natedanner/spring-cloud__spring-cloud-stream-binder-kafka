@@ -46,7 +46,7 @@ public class EncodingDecodingBindAdviceHandler implements ConfigurationPropertie
 
 	@Override
 	public BindHandler apply(BindHandler bindHandler) {
-		BindHandler handler = new AbstractBindHandler(bindHandler) {
+		return new AbstractBindHandler(bindHandler) {
 			@Override
 			public <T> Bindable<T> onStart(ConfigurationPropertyName name,
 										Bindable<T> target, BindContext context) {
@@ -67,6 +67,5 @@ public class EncodingDecodingBindAdviceHandler implements ConfigurationPropertie
 				return bindHandler.onStart(name, target, context);
 			}
 		};
-		return handler;
 	}
 }

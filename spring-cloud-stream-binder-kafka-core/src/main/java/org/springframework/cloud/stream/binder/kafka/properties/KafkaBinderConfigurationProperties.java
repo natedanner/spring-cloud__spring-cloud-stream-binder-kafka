@@ -424,7 +424,7 @@ public class KafkaBinderConfigurationProperties {
 			Map<String, Object> configuration, String bootstrapServersConfig) {
 		final String kafkaConnectionString = getKafkaConnectionString();
 		if (ObjectUtils.isEmpty(configuration.get(bootstrapServersConfig)) ||
-				!kafkaConnectionString.equals("localhost:9092")) {
+				!"localhost:9092".equals(kafkaConnectionString)) {
 			configuration.put(bootstrapServersConfig, kafkaConnectionString);
 		}
 		return Collections.unmodifiableMap(configuration);

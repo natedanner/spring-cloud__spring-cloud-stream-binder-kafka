@@ -51,7 +51,7 @@ public class KafkaStreamsFunctionStateStoreTests {
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
 			"counts");
 
-	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
+	private static final EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
 	@Test
 	public void testKafkaStreamsFuncionWithMultipleStateStores() throws Exception {
@@ -146,7 +146,7 @@ public class KafkaStreamsFunctionStateStoreTests {
 
 		@Bean
 		public java.util.function.Consumer<KTable<Object, String>> hello() {
-			return input -> {
+			return input ->
 				input.toStream().process(() -> new Processor<Object, String>() {
 					@Override
 					@SuppressWarnings("unchecked")
@@ -165,7 +165,6 @@ public class KafkaStreamsFunctionStateStoreTests {
 
 					}
 				}, "my-store", "other-store");
-			};
 		}
 
 		@Bean

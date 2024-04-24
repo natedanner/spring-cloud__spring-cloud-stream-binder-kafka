@@ -201,7 +201,7 @@ public class InteractiveQueryService {
 			try {
 				final KeyQueryMetadata keyQueryMetadata = this.kafkaStreamsRegistry.getKafkaStreams()
 						.stream()
-						.map((k) -> Optional.ofNullable(k.queryMetadataForKey(store, key, serializer)))
+						.map(k -> Optional.ofNullable(k.queryMetadataForKey(store, key, serializer)))
 						.filter(Optional::isPresent).map(Optional::get).findFirst().orElse(null);
 				if (keyQueryMetadata != null) {
 					return keyQueryMetadata.activeHost();
@@ -242,7 +242,7 @@ public class InteractiveQueryService {
 	public <K> KeyQueryMetadata getKeyQueryMetadata(String store, K key, Serializer<K> serializer) {
 		return this.kafkaStreamsRegistry.getKafkaStreams()
 				.stream()
-				.map((k) -> Optional.ofNullable(k.queryMetadataForKey(store, key, serializer)))
+				.map(k -> Optional.ofNullable(k.queryMetadataForKey(store, key, serializer)))
 				.filter(Optional::isPresent).map(Optional::get).findFirst().orElse(null);
 	}
 

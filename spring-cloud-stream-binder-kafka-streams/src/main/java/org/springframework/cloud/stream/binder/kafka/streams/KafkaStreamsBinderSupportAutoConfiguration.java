@@ -191,7 +191,7 @@ public class KafkaStreamsBinderSupportAutoConfiguration {
 
 		String kafkaConnectionString = configProperties.getKafkaConnectionString();
 
-		if (kafkaConnectionString != null && kafkaConnectionString.equals("localhost:9092")) {
+		if ("localhost:9092".equals(kafkaConnectionString)) {
 			//Making sure that the application indeed set a property.
 			String kafkaStreamsBinderBroker = environment.getProperty("spring.cloud.stream.kafka.streams.binder.brokers");
 
@@ -217,7 +217,7 @@ public class KafkaStreamsBinderSupportAutoConfiguration {
 				@SuppressWarnings("unchecked")
 				String bootStrapServers = (String) properties
 						.get(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG);
-				if (bootStrapServers.equals("localhost:9092")) {
+				if ("localhost:9092".equals(bootStrapServers)) {
 					properties.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG,
 							kafkaConnectionString);
 				}
@@ -279,7 +279,7 @@ public class KafkaStreamsBinderSupportAutoConfiguration {
 					(int) configProperties.getReplicationFactor());
 		}
 		return properties.entrySet().stream().collect(
-				Collectors.toMap((e) -> String.valueOf(e.getKey()), Map.Entry::getValue));
+				Collectors.toMap(e -> String.valueOf(e.getKey()), Map.Entry::getValue));
 	}
 
 	private void addPrefix(Properties properties, Map<String, Object> mergedConsProdConfig, String prefix) {

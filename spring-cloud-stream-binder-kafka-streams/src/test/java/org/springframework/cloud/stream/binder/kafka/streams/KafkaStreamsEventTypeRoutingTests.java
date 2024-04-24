@@ -62,11 +62,11 @@ public class KafkaStreamsEventTypeRoutingTests {
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
 			"foo-1", "foo-2");
 
-	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
+	private static final EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
 	private static Consumer<Integer, Foo> consumer;
 
-	private static CountDownLatch LATCH = new CountDownLatch(3);
+	private static final CountDownLatch LATCH = new CountDownLatch(3);
 
 	@BeforeClass
 	public static void setUp() {
@@ -221,9 +221,8 @@ public class KafkaStreamsEventTypeRoutingTests {
 
 		@Bean
 		public java.util.function.Consumer<KTable<Integer, Foo>> consumer() {
-				return ktable -> ktable.toStream().foreach((key, value) -> {
-					LATCH.countDown();
-				});
+				return ktable -> ktable.toStream().foreach((key, value) ->
+					LATCH.countDown());
 		}
 
 		@Bean

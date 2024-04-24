@@ -45,7 +45,7 @@ public class KafkaBinderJaasInitializerListenerTest {
 	@ClassRule
 	public static EmbeddedKafkaRule kafkaEmbedded = new EmbeddedKafkaRule(1, true);
 
-	private static String JAVA_LOGIN_CONFIG_PARAM_VALUE;
+	private static String javaLoginConfigParamValue;
 
 	private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withUserConfiguration(KafkaBinderConfiguration.class, KafkaAutoConfiguration.class);
@@ -55,7 +55,7 @@ public class KafkaBinderJaasInitializerListenerTest {
 		System.setProperty(KAFKA_BROKERS_PROPERTY,
 				kafkaEmbedded.getEmbeddedKafka().getBrokersAsString());
 		//Retrieve the current value for this system property if there is one set.
-		JAVA_LOGIN_CONFIG_PARAM_VALUE = System.getProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM);
+		javaLoginConfigParamValue = System.getProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM);
 		System.clearProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM);
 	}
 
@@ -63,8 +63,8 @@ public class KafkaBinderJaasInitializerListenerTest {
 	public static void clean() {
 		System.clearProperty(KAFKA_BROKERS_PROPERTY);
 		//If there was a previous value for this property, then restore it.
-		if (JAVA_LOGIN_CONFIG_PARAM_VALUE != null) {
-			System.setProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM, JAVA_LOGIN_CONFIG_PARAM_VALUE);
+		if (javaLoginConfigParamValue != null) {
+			System.setProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM, javaLoginConfigParamValue);
 		}
 	}
 

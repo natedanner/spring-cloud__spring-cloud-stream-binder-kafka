@@ -77,11 +77,11 @@ public class KafkaStreamsBinderWordCountFunctionTests {
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
 			"counts", "counts-1", "counts-2", "counts-5",  "counts-6");
 
-	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
+	private static final EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
 	private static Consumer<String, String> consumer;
 
-	private final static CountDownLatch LATCH = new CountDownLatch(1);
+	private static final CountDownLatch LATCH = new CountDownLatch(1);
 
 	@BeforeClass
 	public static void setUp() {
@@ -127,10 +127,10 @@ public class KafkaStreamsBinderWordCountFunctionTests {
 			final MeterRegistry meterRegistry = context.getBean(MeterRegistry.class);
 			Thread.sleep(100);
 
-			assertThat(meterRegistry.getMeters().stream().anyMatch(m -> m.getId().getName().equals("kafka.stream.thread.poll.records.max"))).isTrue();
-			assertThat(meterRegistry.getMeters().stream().anyMatch(m -> m.getId().getName().equals("kafka.consumer.network.io.total"))).isTrue();
-			assertThat(meterRegistry.getMeters().stream().anyMatch(m -> m.getId().getName().equals("kafka.producer.record.send.total"))).isTrue();
-			assertThat(meterRegistry.getMeters().stream().anyMatch(m -> m.getId().getName().equals("kafka.admin.client.network.io.total"))).isTrue();
+			assertThat(meterRegistry.getMeters().stream().anyMatch(m -> "kafka.stream.thread.poll.records.max".equals(m.getId().getName()))).isTrue();
+			assertThat(meterRegistry.getMeters().stream().anyMatch(m -> "kafka.consumer.network.io.total".equals(m.getId().getName()))).isTrue();
+			assertThat(meterRegistry.getMeters().stream().anyMatch(m -> "kafka.producer.record.send.total".equals(m.getId().getName()))).isTrue();
+			assertThat(meterRegistry.getMeters().stream().anyMatch(m -> "kafka.admin.client.network.io.total".equals(m.getId().getName()))).isTrue();
 
 			Assert.isTrue(LATCH.await(5, TimeUnit.SECONDS), "Failed to call customizers");
 			//Testing topology endpoint
@@ -426,7 +426,7 @@ public class KafkaStreamsBinderWordCountFunctionTests {
 
 		@Bean
 		public StreamPartitioner<String, WordCount> streamPartitioner() {
-			return (t, k, v, n) -> k.equals("foo") ? 0 : 1;
+			return (t, k, v, n) -> "foo".equals(k) ? 0 : 1;
 		}
 	}
 

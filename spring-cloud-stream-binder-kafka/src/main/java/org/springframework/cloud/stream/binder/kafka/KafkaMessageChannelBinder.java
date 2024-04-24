@@ -418,7 +418,7 @@ public class KafkaMessageChannelBinder extends
 			}
 			List<ChannelInterceptor> interceptors = ((InterceptableChannel) channel)
 					.getInterceptors();
-			interceptors.forEach((interceptor) -> {
+			interceptors.forEach(interceptor -> {
 				if (interceptor instanceof PartitioningInterceptor) {
 					((PartitioningInterceptor) interceptor)
 							.setPartitionCount(partitions.size());
@@ -539,7 +539,7 @@ public class KafkaMessageChannelBinder extends
 		props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
 				ByteArraySerializer.class);
 		props.put(ProducerConfig.ACKS_CONFIG,
-				String.valueOf(this.configurationProperties.getRequiredAcks()));
+				this.configurationProperties.getRequiredAcks());
 		Map<String, Object> mergedConfig = this.configurationProperties
 				.mergedProducerConfiguration();
 		if (!ObjectUtils.isEmpty(mergedConfig)) {
@@ -969,7 +969,7 @@ public class KafkaMessageChannelBinder extends
 									return shouldSeek;
 								})
 								.collect(Collectors.toList());
-							if (toSeek.size() > 0) {
+							if (!toSeek.isEmpty()) {
 								if ("earliest".equals(resetTo)) {
 									consumer.seekToBeginning(toSeek);
 								}
@@ -1206,7 +1206,7 @@ public class KafkaMessageChannelBinder extends
 			@SuppressWarnings("rawtypes")
 			DlqSender<?, ?> dlqSender = new DlqSender(kafkaTemplate, sendTimeout);
 
-			return (message) -> {
+			return message -> {
 
 				ConsumerRecord<Object, Object> record = StaticMessageHeaderAccessor.getSourceData(message);
 
@@ -1337,11 +1337,10 @@ public class KafkaMessageChannelBinder extends
 						: "error." + record.topic() + "." + group;
 				if (this.transactionTemplate != null) {
 					Throwable throwable2 = throwable;
-					this.transactionTemplate.executeWithoutResult(status -> {
+					this.transactionTemplate.executeWithoutResult(status ->
 						dlqSender.sendToDlq(recordToSend.get(), kafkaHeaders, dlqName, group, throwable2,
 								determinDlqPartitionFunction(properties.getExtension().getDlqPartitions()),
-								headers, this.ackModeInfo.get(destination));
-					});
+								headers, this.ackModeInfo.get(destination)));
 				}
 				else {
 					dlqSender.sendToDlq(recordToSend.get(), kafkaHeaders, dlqName, group, throwable,
@@ -1379,7 +1378,7 @@ public class KafkaMessageChannelBinder extends
 		}
 		final MessageHandler superHandler = super.getErrorMessageHandler(destination,
 				group, properties);
-		return (message) -> {
+		return message -> {
 			ConsumerRecord<?, ?> record = (ConsumerRecord<?, ?>) message.getHeaders()
 					.get(KafkaHeaders.RAW_DATA);
 			if (!(message instanceof ErrorMessage)) {
@@ -1479,7 +1478,7 @@ public class KafkaMessageChannelBinder extends
 			ExtendedConsumerProperties<KafkaConsumerProperties> extendedConsumerProperties,
 			ConsumerFactory<?, ?> consumerFactory) {
 
-		final TopicPartitionOffset[] TopicPartitionOffsets =
+		final TopicPartitionOffset[] topicPartitionOffsets =
 				new TopicPartitionOffset[listenedPartitions.size()];
 		int i = 0;
 		SeekPosition seekPosition = null;
@@ -1490,10 +1489,10 @@ public class KafkaMessageChannelBinder extends
 		}
 		for (PartitionInfo partition : listenedPartitions) {
 
-			TopicPartitionOffsets[i++] = new TopicPartitionOffset(
+			topicPartitionOffsets[i++] = new TopicPartitionOffset(
 					partition.topic(), partition.partition(), seekPosition);
 		}
-		return TopicPartitionOffsets;
+		return topicPartitionOffsets;
 	}
 
 	private String toDisplayString(String original, int maxCharacters) {

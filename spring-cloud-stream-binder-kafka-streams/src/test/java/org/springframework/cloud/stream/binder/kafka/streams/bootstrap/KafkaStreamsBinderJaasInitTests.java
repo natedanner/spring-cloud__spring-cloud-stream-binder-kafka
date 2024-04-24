@@ -41,18 +41,18 @@ public class KafkaStreamsBinderJaasInitTests {
 	@ClassRule
 	public static EmbeddedKafkaRule embeddedKafka = new EmbeddedKafkaRule(1, true, 10);
 
-	private static String JAVA_LOGIN_CONFIG_PARAM_VALUE;
+	private static String javaLoginConfigParamValue;
 
 	@BeforeClass
 	public static void beforeAll() {
-		JAVA_LOGIN_CONFIG_PARAM_VALUE = System.getProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM);
+		javaLoginConfigParamValue = System.getProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM);
 		System.clearProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM);
 	}
 
 	@AfterClass
 	public static void afterAll() {
-		if (JAVA_LOGIN_CONFIG_PARAM_VALUE != null) {
-			System.setProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM, JAVA_LOGIN_CONFIG_PARAM_VALUE);
+		if (javaLoginConfigParamValue != null) {
+			System.setProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM, javaLoginConfigParamValue);
 		}
 	}
 

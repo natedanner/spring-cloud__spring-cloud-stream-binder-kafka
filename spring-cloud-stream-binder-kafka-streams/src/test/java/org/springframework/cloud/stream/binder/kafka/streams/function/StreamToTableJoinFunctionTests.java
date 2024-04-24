@@ -78,7 +78,7 @@ public class StreamToTableJoinFunctionTests {
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1,
 			true, "output-topic-1", "output-topic-2", "user-clicks-2", "user-regions-2");
 
-	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
+	private static final EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
 	@Test
 	public void testStreamToTable() {

@@ -58,7 +58,7 @@ public class KafkaStreamsFunctionCompositionTests {
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
 			"fooFuncanotherFooFunc-out-0", "bar");
 
-	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
+	private static final EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule.getEmbeddedKafka();
 
 	private static Consumer<String, String> consumer;
 
@@ -251,7 +251,7 @@ public class KafkaStreamsFunctionCompositionTests {
 
 				final ConsumerRecords<String, String> records = KafkaTestUtils.getRecords(consumer);
 				assertThat(records.iterator().hasNext()).isTrue();
-				assertThat(records.iterator().next().value().equals("foo1foo2From-anotherFooFuncFrom-yetAnotherFooFuncFrom-lastFunctionInChain")).isTrue();
+				assertThat("foo1foo2From-anotherFooFuncFrom-yetAnotherFooFuncFrom-lastFunctionInChain".equals(records.iterator().next().value())).isTrue();
 			}
 			finally {
 				pf.destroy();
@@ -296,7 +296,7 @@ public class KafkaStreamsFunctionCompositionTests {
 
 				final ConsumerRecords<String, String> records = KafkaTestUtils.getRecords(consumer);
 				assertThat(records.iterator().hasNext()).isTrue();
-				assertThat(records.iterator().next().value().equals("foo1foo2From-anotherFooFuncFrom-yetAnotherFooFuncFrom-lastFunctionInChain")).isTrue();
+				assertThat("foo1foo2From-anotherFooFuncFrom-yetAnotherFooFuncFrom-lastFunctionInChain".equals(records.iterator().next().value())).isTrue();
 			}
 			finally {
 				pf.destroy();
@@ -342,9 +342,8 @@ public class KafkaStreamsFunctionCompositionTests {
 
 		@Bean
 		public Function<KStream<String, String>, KStream<String, String>> fooFunc() {
-			return input -> input.peek((s, s2) -> {
-				System.out.println("hello: " + s2);
-			});
+			return input -> input.peek((s, s2) ->
+				System.out.println("hello: " + s2));
 		}
 
 		@Bean
@@ -366,9 +365,8 @@ public class KafkaStreamsFunctionCompositionTests {
 
 		@Bean
 		public Function<KStream<String, String>, KStream<String, String>> fooFunc() {
-			return input -> input.peek((s, s2) -> {
-				System.out.println("hello: " + s2);
-			});
+			return input -> input.peek((s, s2) ->
+				System.out.println("hello: " + s2));
 		}
 
 		@Bean

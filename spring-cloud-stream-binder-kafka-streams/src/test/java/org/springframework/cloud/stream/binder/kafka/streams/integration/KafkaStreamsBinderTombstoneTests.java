@@ -68,7 +68,7 @@ public class KafkaStreamsBinderTombstoneTests {
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
 			"counts-1");
 
-	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
+	private static final EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
 			.getEmbeddedKafka();
 
 	private static Consumer<String, String> consumer;

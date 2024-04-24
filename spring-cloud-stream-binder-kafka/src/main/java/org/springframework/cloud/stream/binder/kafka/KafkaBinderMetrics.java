@@ -139,7 +139,7 @@ public class KafkaBinderMetrics
 			String group = topicInfo.getValue().getConsumerGroup();
 
 			final Gauge register = Gauge.builder(OFFSET_LAG_METRIC_NAME, this,
-					(o) -> computeAndGetUnconsumedMessages(topic, group)).tag("group", group)
+					o -> computeAndGetUnconsumedMessages(topic, group)).tag("group", group)
 					.tag("topic", topic)
 					.description("Unconsumed messages for a particular group and topic")
 					.register(registry);
@@ -196,7 +196,7 @@ public class KafkaBinderMetrics
 		long lag = 0;
 		Consumer<?, ?> metadataConsumer = metadataConsumers.computeIfAbsent(
 				group,
-				(g) -> createConsumerFactory().createConsumer(g, "monitoring"));
+				g -> createConsumerFactory().createConsumer(g, "monitoring"));
 		List<PartitionInfo> partitionInfos = metadataConsumer
 				.partitionsFor(topic);
 		List<TopicPartition> topicPartitions = new LinkedList<>();

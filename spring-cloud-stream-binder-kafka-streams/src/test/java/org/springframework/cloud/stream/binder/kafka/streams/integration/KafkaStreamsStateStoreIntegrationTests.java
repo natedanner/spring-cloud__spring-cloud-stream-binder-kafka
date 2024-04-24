@@ -55,7 +55,7 @@ public class KafkaStreamsStateStoreIntegrationTests {
 	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, true,
 			"counts-id");
 
-	private static EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
+	private static final EmbeddedKafkaBroker embeddedKafka = embeddedKafkaRule
 			.getEmbeddedKafka();
 
 	@Test
@@ -78,9 +78,6 @@ public class KafkaStreamsStateStoreIntegrationTests {
 		try {
 			Thread.sleep(2000);
 			receiveAndValidateFoo(context, ProductCountApplication.class);
-		}
-		catch (Exception e) {
-			throw e;
 		}
 		finally {
 			context.close();
@@ -113,9 +110,6 @@ public class KafkaStreamsStateStoreIntegrationTests {
 			// Normally, that will cause an exception to be thrown. However by not getting any exceptions, we are verifying
 			// that the binder is handling it appropriately.
 			//For more info, see this issue: https://github.com/spring-cloud/spring-cloud-stream-binder-kafka/issues/551
-		}
-		catch (Exception e) {
-			throw e;
 		}
 		finally {
 			context.close();

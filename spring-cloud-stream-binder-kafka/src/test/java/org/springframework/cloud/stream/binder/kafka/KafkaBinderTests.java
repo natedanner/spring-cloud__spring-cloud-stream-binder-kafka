@@ -171,7 +171,7 @@ public class KafkaBinderTests extends
 
 	private static final int DEFAULT_OPERATION_TIMEOUT = 30;
 
-	private final String CLASS_UNDER_TEST_NAME = KafkaMessageChannelBinder.class
+	private final String classUnderTestName = KafkaMessageChannelBinder.class
 			.getSimpleName();
 
 	private KafkaTestBinder binder;
@@ -320,7 +320,7 @@ public class KafkaBinderTests extends
 
 	@Override
 	protected String getClassUnderTestName() {
-		return CLASS_UNDER_TEST_NAME;
+		return classUnderTestName;
 	}
 
 	@Override
@@ -1770,7 +1770,7 @@ public class KafkaBinderTests extends
 		assertThat(messages).extracting("payload").containsExactlyInAnyOrder(
 				testPayload1.getBytes(), testPayload2.getBytes(), testPayload3.getBytes());
 		Arrays.asList(messages).forEach(message -> {
-			if (new String((byte[]) message.getPayload()).equals("foo1")) {
+			if ("foo1".equals(new String((byte[]) message.getPayload()))) {
 				assertThat(message.getHeaders().get(KafkaHeaders.RECEIVED_TOPIC)).isEqualTo("foo.x");
 			}
 			else {
@@ -1997,7 +1997,7 @@ public class KafkaBinderTests extends
 		Message<?> receive2 = receive(input2);
 		assertThat(receive2).isNotNull();
 
-		Condition<Message<?>> correlationHeadersForPayload2 = new Condition<Message<?>>() {
+		Condition<Message<?>> correlationHeadersForPayload2 = new Condition<>() {
 
 			@Override
 			public boolean matches(Message<?> value) {
@@ -2025,7 +2025,7 @@ public class KafkaBinderTests extends
 					receive2);
 			assertThat(receivedMessages).extracting("payload").containsExactlyInAnyOrder(
 					new byte[] { 48 }, new byte[] { 49 }, new byte[] { 50 });
-			Condition<Message<?>> payloadIs2 = new Condition<Message<?>>() {
+			Condition<Message<?>> payloadIs2 = new Condition<>() {
 
 				@Override
 				public boolean matches(Message<?> value) {
@@ -2086,9 +2086,9 @@ public class KafkaBinderTests extends
 		ExtendedProducerProperties<KafkaProducerProperties> producerProperties = createProducerProperties();
 
 		this.applicationContext.registerBean("pkExtractor",
-				PartitionTestSupport.class, () -> new PartitionTestSupport());
+				PartitionTestSupport.class, PartitionTestSupport::new);
 		this.applicationContext.registerBean("pkSelector",
-				PartitionTestSupport.class, () -> new PartitionTestSupport());
+				PartitionTestSupport.class, PartitionTestSupport::new);
 		producerProperties.setPartitionKeyExtractorName("pkExtractor");
 		producerProperties.setPartitionSelectorName("pkSelector");
 		producerProperties.setPartitionCount(3); // overridden to 8 on the actual topic
@@ -2214,9 +2214,9 @@ public class KafkaBinderTests extends
 		ExtendedProducerProperties<KafkaProducerProperties> properties = createProducerProperties();
 		properties.setHeaderMode(HeaderMode.none);
 		this.applicationContext.registerBean("pkExtractor",
-				RawKafkaPartitionTestSupport.class, () -> new RawKafkaPartitionTestSupport());
+				RawKafkaPartitionTestSupport.class, RawKafkaPartitionTestSupport::new);
 		this.applicationContext.registerBean("pkSelector",
-				RawKafkaPartitionTestSupport.class, () -> new RawKafkaPartitionTestSupport());
+				RawKafkaPartitionTestSupport.class, RawKafkaPartitionTestSupport::new);
 		properties.setPartitionKeyExtractorName("pkExtractor");
 		properties.setPartitionSelectorName("pkSelector");
 		properties.setPartitionCount(6);
@@ -3455,27 +3455,23 @@ public class KafkaBinderTests extends
 		KafkaTemplate template = new KafkaTemplate(
 				new DefaultKafkaProducerFactory<>(producerProps));
 		template.send("pollable", "testPollable");
-		boolean polled = inboundBindTarget.poll(m -> {
-			assertThat(m.getPayload()).isEqualTo("testPollable");
-		});
+		boolean polled = inboundBindTarget.poll(m ->
+			assertThat(m.getPayload()).isEqualTo("testPollable"));
 		int n = 0;
 		while (n++ < 100 && !polled) {
-			polled = inboundBindTarget.poll(m -> {
-				assertThat(m.getPayload()).isEqualTo("testPollable".getBytes());
-			});
+			polled = inboundBindTarget.poll(m ->
+				assertThat(m.getPayload()).isEqualTo("testPollable".getBytes()));
 			Thread.sleep(100);
 		}
 		assertThat(polled).isTrue();
 
 		template.send("anotherOne", "testPollable2");
-		polled = inboundBindTarget.poll(m -> {
-			assertThat(m.getPayload()).isEqualTo("testPollable2");
-		});
+		polled = inboundBindTarget.poll(m ->
+			assertThat(m.getPayload()).isEqualTo("testPollable2"));
 		n = 0;
 		while (n++ < 100 && !polled) {
-			polled = inboundBindTarget.poll(m -> {
-				assertThat(m.getPayload()).isEqualTo("testPollable2".getBytes());
-			});
+			polled = inboundBindTarget.poll(m ->
+				assertThat(m.getPayload()).isEqualTo("testPollable2".getBytes()));
 			Thread.sleep(100);
 		}
 		assertThat(polled).isTrue();
@@ -3519,9 +3515,8 @@ public class KafkaBinderTests extends
 		catch (MessageHandlingException e) {
 			assertThat(e.getCause()).isInstanceOf(RequeueCurrentMessageException.class);
 		}
-		boolean polled = inboundBindTarget.poll(m -> {
-			assertThat(m.getPayload()).isEqualTo("testPollable".getBytes());
-		});
+		boolean polled = inboundBindTarget.poll(m ->
+			assertThat(m.getPayload()).isEqualTo("testPollable".getBytes()));
 		assertThat(polled).isTrue();
 		binding.unbind();
 	}
